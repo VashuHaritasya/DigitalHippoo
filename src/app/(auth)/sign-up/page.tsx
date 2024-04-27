@@ -9,12 +9,11 @@ import {
   AuthcredentialsValidator,
   TAuthcredentialsValidator,
 } from "@/lib/validators/account-credentials-validators";
+import { trpc } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-
-import { z } from "zod";
 
 const Page = () => {
   const {
@@ -25,8 +24,11 @@ const Page = () => {
     resolver: zodResolver(AuthcredentialsValidator),
   });
 
+  const { mutate, isLoading } = trpc.auth.createPayloadUser.useMutation({});
+
   const onSubmit = ({ email, password }: TAuthcredentialsValidator) => {
     //SEND DATA TO THE SERVER
+    mutate({ email, password });
   };
 
   return (
@@ -64,6 +66,7 @@ const Page = () => {
                   <Label htmlFor="password">Password</Label>
                   <Input
                     {...register("password")}
+                    type="password"
                     className={cn({
                       "focus-visible:ring-red-500": errors.password,
                     })}
