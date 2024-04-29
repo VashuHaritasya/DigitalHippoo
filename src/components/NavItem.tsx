@@ -12,11 +12,18 @@ type Category = (typeof PRODUCT_CATEGORIES)[number];
 interface NavItemProps {
   category: Category;
   handleOpen: () => void;
+  close: () => void;
   isOpen: boolean;
   isAnyOpen: boolean;
 }
 
-const NavItem = ({ isAnyOpen, category, handleOpen, isOpen }: NavItemProps) => {
+const NavItem = ({
+  isAnyOpen,
+  category,
+  handleOpen,
+  close,
+  isOpen,
+}: NavItemProps) => {
   return (
     <div className="flex">
       <div className="relative flex items-center">
@@ -35,8 +42,9 @@ const NavItem = ({ isAnyOpen, category, handleOpen, isOpen }: NavItemProps) => {
       </div>
       {isOpen ? (
         <div
+          onClick={() => close()}
           className={cn("absolute inset-x-0 top-full text-muted-foreground", {
-            "animate-in fade-in-10 slide-in-from-top-5": isAnyOpen,
+            "animate-in fade-in-10 slide-in-from-top-5": !isAnyOpen,
           })}
         >
           <div
@@ -49,6 +57,7 @@ const NavItem = ({ isAnyOpen, category, handleOpen, isOpen }: NavItemProps) => {
                 <div className="col-span-4 col-start-1 grid grid-cols-3 gap-x-8">
                   {category.featured.map((item) => (
                     <div
+                      onClick={() => close}
                       key={item.name}
                       className="group relative text-base sm:text-sm"
                     >
@@ -61,6 +70,7 @@ const NavItem = ({ isAnyOpen, category, handleOpen, isOpen }: NavItemProps) => {
                         />
                       </div>
                       <Link
+                        //@ts-expect-error
                         href={item.href}
                         className="mt-6 block font-medium text-gray-900"
                       >
